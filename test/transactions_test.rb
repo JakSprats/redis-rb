@@ -58,34 +58,34 @@ test "MULTI with a block yielding the client" do |r|
   assert "s1" == r.get("foo")
 end
 
-test "WATCH with an unmodified key" do |r|
-  r.watch "foo"
-  r.multi do |multi|
-    multi.set "foo", "s1"
-  end
+#test "WATCH with an unmodified key" do |r|
+  #r.watch "foo"
+  #r.multi do |multi|
+    #multi.set "foo", "s1"
+  #end
+#
+  #assert "s1" == r.get("foo")
+#end
 
-  assert "s1" == r.get("foo")
-end
-
-test "WATCH with a modified key" do |r|
-  r.watch "foo"
-  r.set "foo", "s1"
-  res = r.multi do |multi|
-    multi.set "foo", "s2"
-  end
-
-  assert nil == res
-  assert "s1" == r.get("foo")
-end
-
-test "UNWATCH with a modified key" do |r|
-  r.watch "foo"
-  r.set "foo", "s1"
-  r.unwatch
-  r.multi do |multi|
-    multi.set "foo", "s2"
-  end
-
-  assert "s2" == r.get("foo")
-end
+#test "WATCH with a modified key" do |r|
+  #r.watch "foo"
+  #r.set "foo", "s1"
+  #res = r.multi do |multi|
+    #multi.set "foo", "s2"
+  #end
+#
+  #assert nil == res
+  #assert "s1" == r.get("foo")
+#end
+#
+#test "UNWATCH with a modified key" do |r|
+  #r.watch "foo"
+  #r.set "foo", "s1"
+  #r.unwatch
+  #r.multi do |multi|
+    #multi.set "foo", "s2"
+  #end
+#
+  #assert "s2" == r.get("foo")
+#end
 

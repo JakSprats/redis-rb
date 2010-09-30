@@ -22,13 +22,13 @@ test "MULTI/DISCARD" do |r|
   end
 end
 
-test "WATCH/UNWATCH" do |r|
-  assert_raise Redis::Distributed::CannotDistribute do
-    r.watch("foo")
-  end
-
-  assert_raise Redis::Distributed::CannotDistribute do
-    r.unwatch
-  end
-end
+#test "WATCH/UNWATCH" do |r|
+  #assert_raise Redis::Distributed::CannotDistribute do
+    #r.watch("foo")
+  #end
+#
+  #assert_raise Redis::Distributed::CannotDistribute do
+    #r.unwatch
+  #end
+#end
 

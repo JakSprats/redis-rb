@@ -48,9 +48,9 @@ class Redis
     @client.call(:auth, password)
   end
 
-  def select(db)
+  def changedb(db)
     @client.db = db
-    @client.call(:select, db)
+    @client.call(:changedb, db)
   end
 
   def info
@@ -103,9 +103,9 @@ class Redis
     @client.call(:substr, key, start, stop)
   end
 
-  def strlen(key)
-    @client.call(:strlen, key)
-  end
+  #def strlen(key)
+    #@client.call(:strlen, key)
+  #end
 
   def hgetall(key)
     Hash[*@client.call(:hgetall, key)]
@@ -167,9 +167,9 @@ class Redis
     @client.call(:lindex, key, index)
   end
 
-  def linsert(key, where, pivot, value)
-    @client.call(:linsert, key, where, pivot, value)
-  end
+  #def linsert(key, where, pivot, value)
+    #@client.call(:linsert, key, where, pivot, value)
+  #end
 
   def lset(key, index, value)
     @client.call(:lset, key, index, value)
@@ -183,17 +183,17 @@ class Redis
     @client.call(:rpush, key, value)
   end
 
-  def rpushx(key, value)
-    @client.call(:rpushx, key, value)
-  end
+  #def rpushx(key, value)
+    #@client.call(:rpushx, key, value)
+  #end
 
   def lpush(key, value)
     @client.call(:lpush, key, value)
   end
 
-  def lpushx(key, value)
-    @client.call(:lpushx, key, value)
-  end
+  #def lpushx(key, value)
+    #@client.call(:lpushx, key, value)
+  #end
 
   def rpop(key)
     @client.call(:rpop, key)
@@ -378,9 +378,9 @@ class Redis
     _bool @client.call(:expire, key, seconds)
   end
 
-  def persist(key)
-    _bool @client.call(:persist, key)
-  end
+  #def persist(key)
+    #_bool @client.call(:persist, key)
+  #end
 
   def ttl(key)
     @client.call(:ttl, key)
@@ -389,6 +389,72 @@ class Redis
   def expireat(key, unix_time)
     _bool @client.call(:expireat, key, unix_time)
   end
+
+  # REDISQL START
+  def create_table(tname, col_defs)
+    _bool @client.call(:create, "TABLE", tname, *(col_defs.split))
+  end
+
+  #def create_table_from_redis_object(tname, redis_obj)
+
+  #def create_table_as(tname, redis_obj, redis_command, redis_args)
+
+  def drop_table(tname)
+    _bool @client.call(:drop, "TABLE", tname)
+  end
+
+  def desc(tname)
+    @client.call(:desc, tname)
+  end
+
+  def dump(tname)
+    @client.call(:dump, tname)
+  end
+
+  def dump_to_mysql(tname)
+    @client.call(:dump, tname, "TO", "MYSQL")
+  end
+
+  def create_index(iname, indexed_column)
+    _bool @client.call(:create, "INDEX", iname, "ON", indexed_column)
+  end
+
+  def drop_index(iname)
+    _bool @client.call(:drop, "INDEX", iname)
+  end
+
+  def drop_index(iname)
+    _bool @client.call(:drop, "INDEX", iname)
+  end
+
+  def insert(tname, values_list)
+    _bool @client.call(:insert, "INTO", tname, "VALUES", values_list)
+  end
+
+  #def insert_and_return_size(tname, values_list)
+
+  def select(col_list, tname, where_clause)
+    @client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+  end
+
+  #def select_store(col_list, tname, where_clause, $redis_command, $redis_name)
+
+  def scanselect(col_list, tname, where_clause)
+    @client.call(:scanselect, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+  end
+
+  def delete(tname, where_clause)
+    @client.call(:delete, "FROM", tname, "WHERE", *(where_clause.split))
+  end
+
+  def update(tname, update_list, where_clause)
+    @client.call(:update, tname, "SET", update_list, "WHERE", *(where_clause.split))
+  end
+
+  #def normalize(main_wildcard, secondary_wildcard_list)
+  #def denormalize(tname, main_wildcard)
+
+  # REDISQL END
 
   def hset(key, field, value)
     _bool @client.call(:hset, key, field, value)
@@ -537,13 +603,13 @@ class Redis
     @client = original
   end
 
-  def watch(*keys)
-    @client.call(:watch, *keys)
-  end
+  #def watch(*keys)
+    #@client.call(:watch, *keys)
+  #end
 
-  def unwatch
-    @client.call(:unwatch)
-  end
+  #def unwatch
+    #@client.call(:unwatch)
+  #end
 
   def exec
     @client.call(:exec)

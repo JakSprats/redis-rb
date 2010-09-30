@@ -62,9 +62,9 @@ test "MSETNX mapped" do |r|
   assert nil == r.get("bar")
 end
 
-test "STRLEN" do |r|
-  r.set "foo", "lorem"
-
-  assert 5 == r.strlen("foo")
-end
+#test "STRLEN" do |r|
+  #r.set "foo", "lorem"
+#
+  #assert 5 == r.strlen("foo")
+#end
 

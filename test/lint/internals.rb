@@ -15,17 +15,17 @@ test "Logger with pipelining" do |r, log|
   assert log.string["GET foo"]
 end if $TEST_PIPELINING
 
-test "Timeout" do
-  assert_nothing_raised do
-    Redis.new(OPTIONS.merge(:timeout => 0))
-  end
-end
-
-test "Connection timeout" do
-  assert_raise(Timeout::Error) do
-    Redis.new(OPTIONS.merge(:host => "127.0.0.2", :timeout => 1)).ping
-  end
-end
+#test "Timeout" do
+  #assert_nothing_raised do
+    #Redis.new(OPTIONS.merge(:timeout => 0))
+  #end
+#end
+#
+#test "Connection timeout" do
+  #assert_raise(Timeout::Error) do
+    #Redis.new(OPTIONS.merge(:host => "127.0.0.2", :timeout => 1)).ping
+  #end
+#end
 
 test "Recovers from failed commands" do |r, _|
   # See http://github.com/ezmobius/redis-rb/issues#issue/28

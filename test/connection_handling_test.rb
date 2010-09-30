@@ -29,7 +29,7 @@ end
 test "SELECT" do |r|
   r.set "foo", "bar"
 
-  r.select 14
+  r.changedb 14
   assert nil == r.get("foo")
 
   r.client.disconnect

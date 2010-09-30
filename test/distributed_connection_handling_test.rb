@@ -12,13 +12,13 @@ test "PING" do |r|
   assert ["PONG"] == r.ping
 end
 
-test "SELECT" do |r|
+test "CHANGEDB" do |r|
   r.set "foo", "bar"
 
-  r.select 14
+  r.changedb 14
   assert nil == r.get("foo")
 
-  r.select 15
+  r.changedb 15
 
   assert "bar" == r.get("foo")
 end

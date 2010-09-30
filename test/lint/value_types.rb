@@ -44,13 +44,13 @@ test "EXPIREAT" do |r|
   assert nil == r.get("foo")
 end
 
-test "PERSIST" do |r|
-  r.set("foo", "s1")
-  r.expire("foo", 1)
-  r.persist("foo")
-
-  assert(-1 == r.ttl("foo"))
-end
+#test "PERSIST" do |r|
+#  r.set("foo", "s1")
+#  r.expire("foo", 1)
+#  r.persist("foo")
+#
+#  assert(-1 == r.ttl("foo"))
+#end
 
 test "TTL" do |r|
   r.set("foo", "s1")
@@ -60,12 +60,12 @@ test "TTL" do |r|
 end
 
 test "MOVE" do |r|
-  r.select 14
+  r.changedb 14
   r.flushdb
 
   r.set "bar", "s3"
 
-  r.select 15
+  r.changedb 15
 
   r.set "foo", "s1"
   r.set "bar", "s2"
@@ -76,7 +76,7 @@ test "MOVE" do |r|
   assert !r.move("bar", 14)
   assert "s2" == r.get("bar")
 
-  r.select 14
+  r.changedb 14
 
   assert "s1" == r.get("foo")
   assert "s3" == r.get("bar")

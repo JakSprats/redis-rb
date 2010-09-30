@@ -38,8 +38,8 @@ class Redis
       on_each_node :quit
     end
 
-    def select(db)
-      on_each_node :select, db
+    def changedb(db)
+      on_each_node :changedb, db
     end
 
     def ping
@@ -94,9 +94,9 @@ class Redis
       node_for(key).expireat(key, unix_time)
     end
 
-    def persist(key)
-      node_for(key).persist(key)
-    end
+    #def persist(key)
+      #node_for(key).persist(key)
+    #end
 
     def ttl(key)
       node_for(key).ttl(key)
@@ -422,13 +422,13 @@ class Redis
       raise CannotDistribute, :multi
     end
 
-    def watch(*keys)
-      raise CannotDistribute, :watch
-    end
+    #def watch(*keys)
+      #raise CannotDistribute, :watch
+    #end
 
-    def unwatch
-      raise CannotDistribute, :unwatch
-    end
+    #def unwatch
+      #raise CannotDistribute, :unwatch
+    #end
 
     def exec
       raise CannotDistribute, :exec
