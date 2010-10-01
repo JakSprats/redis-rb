@@ -395,9 +395,13 @@ class Redis
     _bool @client.call(:create, "TABLE", tname, *(col_defs.split))
   end
 
-  #def create_table_from_redis_object(tname, redis_obj)
+  def create_table_from_redis_object(tname, redis_obj)
+    _bool @client.call(:create, "TABLE", tname, "AS", "DUMP", redis_obj)
+  end
 
-  #def create_table_as(tname, redis_obj, redis_command, redis_args)
+  def create_table_as(tname, redis_command, redis_obj, redis_args)
+    _bool @client.call(:create, "TABLE", tname, "AS", redis_command, redis_obj, *(redis_args.split))
+  end
 
   def drop_table(tname)
     _bool @client.call(:drop, "TABLE", tname)
@@ -431,13 +435,22 @@ class Redis
     _bool @client.call(:insert, "INTO", tname, "VALUES", values_list)
   end
 
-  #def insert_and_return_size(tname, values_list)
+  def insert_and_return_size(tname, values_list)
+    @client.call(:insert, "INTO", tname, "VALUES", values_list, "RETURN", "SIZE")
+  end
 
   def select(col_list, tname, where_clause)
     @client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
   end
 
-  #def select_store(col_list, tname, where_clause, $redis_command, $redis_name)
+  def select_store(col_list, tname, where_clause, redis_command, redis_name)
+    w_args = where_clause
+    w_args += " STORE "
+    w_args += redis_command
+    w_args += " "
+    w_args += redis_name
+    @client.call(:select, col_list, "FROM", tname, "WHERE", *(w_args.split))
+  end
 
   def scanselect(col_list, tname, where_clause)
     @client.call(:scanselect, col_list, "FROM", tname, "WHERE", *(where_clause.split))
@@ -451,8 +464,13 @@ class Redis
     @client.call(:update, tname, "SET", update_list, "WHERE", *(where_clause.split))
   end
 
-  #def normalize(main_wildcard, secondary_wildcard_list)
-  #def denormalize(tname, main_wildcard)
+  def normalize(main_wildcard, secondary_wildcard_list)
+    @client.call(:norm, main_wildcard, secondary_wildcard_list)
+  end
+
+  def denormalize(tname, main_wildcard)
+    @client.call(:denorm, tname, main_wildcard)
+  end
 
   # REDISQL END
 
