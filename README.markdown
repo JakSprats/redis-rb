@@ -1,3 +1,29 @@
+# redisql-rb
+This is a fork of redis-rb, it supports [Redisql](http://code.google.com/p/redisql) [commands](http://code.google.com/p/redisql/wiki/CommandReference)
+
+Redisql commands are tested in the file "test/commands_on_sql_test.rb"
+
+A quick example would be: (in Ruby)
+  >> r.create_table("new_table", "(id INT, val TEXT)")
+  >> r.insert("new_table", "(1,ONE)");
+  >> r.insert("new_table", "(2,TWO)");
+  >> r.select("*", "new_table", "id BETWEEN 1 AND 2")
+  => ["1,ONE", "2,TWO"]
+  >> r.update("new_table", "val=two", "id = 2")
+  >> r.select("*", "new_table", "id BETWEEN 1 AND 2")
+  => ["1,ONE", "2,two"]
+It is SQL, you know it already probably
+
+There are also [MORPH](http://code.google.com/p/redisql/wiki/CommandReference#MORPH_Commands) commands to morph data between relation tables and redis data objects
+  Create the table "x_table" from the results from the redis command "ZRANGE zset 0 1 WITHSCORES"
+  >> r.create_table_as("x_table", "ZRANGE", "zset", "0 1 WITHSCORES")
+
+  Create the redis HashTable "z_hash" from the results of the SQL command "SELECT zkey,zvalue FROM z_table WHERE zkey BETWEEN z2 AND z4"
+  >> r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET", "z_hash")
+The MORPH commands work on all redis data objects and w/ all SQL SELECT result sets (i.e. range-queries and joins)
+
+AND of course ALL redis commands are supported ... the following is the text of redis-rb
+
 # redis-rb
 
 A Ruby client library for the [Redis](http://code.google.com/p/redis) key-value store.
