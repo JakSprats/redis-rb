@@ -22,7 +22,7 @@ class Redis
     def connect
       connect_to(@host, @port)
       call(:auth, @password) if @password
-      call(:changedb, @db) if @db != 0
+      call(:select, @db) if @db != 0
       @sock
     end
 

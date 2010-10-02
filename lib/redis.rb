@@ -440,8 +440,19 @@ class Redis
     @client.call(:insert, "INTO", tname, "VALUES", values_list, "RETURN", "SIZE")
   end
 
-  def select(col_list, tname, where_clause)
-    @client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+  # "select" is used in both redis and Redisql, so it must be overridden here
+  # for redis: select(db)
+  # for SQL:   select(col_list, tname, where_clause)
+  def select(*args)
+    if (args.length == 1)
+      db = args[0]
+      changedb(db)
+    else
+      col_list     = args[0]
+      tname        = args[1]
+      where_clause = args[2]
+      @client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+    end
   end
 
   def select_store(col_list, tname, where_clause, redis_command, redis_name)

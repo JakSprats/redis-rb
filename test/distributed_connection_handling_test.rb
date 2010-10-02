@@ -15,10 +15,10 @@ end
 test "CHANGEDB" do |r|
   r.set "foo", "bar"
 
-  r.changedb 14
+  r.select 14
   assert nil == r.get("foo")
 
-  r.changedb 15
+  r.select 15
 
   assert "bar" == r.get("foo")
 end

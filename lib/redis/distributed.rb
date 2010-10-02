@@ -38,8 +38,8 @@ class Redis
       on_each_node :quit
     end
 
-    def changedb(db)
-      on_each_node :changedb, db
+    def select(db)
+      on_each_node :select, db
     end
 
     def ping

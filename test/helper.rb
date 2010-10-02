@@ -16,9 +16,9 @@ NODES   = ["redis://127.0.0.1:6379/15"]
 def init(redis)
   begin
     redis.flushdb
-    redis.changedb 14
+    redis.select 14
     redis.flushdb
-    redis.changedb 15
+    redis.select 15
     redis
   rescue Errno::ECONNREFUSED
     puts <<-EOS
