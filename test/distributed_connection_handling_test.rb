@@ -12,7 +12,7 @@ test "PING" do |r|
   assert ["PONG"] == r.ping
 end
 
-test "CHANGEDB" do |r|
+test "SELECT" do |r|
   r.set "foo", "bar"
 
   r.select 14
