@@ -51,7 +51,7 @@ end
 
 test "106 CREATE/DROP INDEX" do |r|
   r.changedb 12
-  r.create_index("new_table:val:index", "(new_table.val)")
+  r.create_index("new_table:val:index", "new_table", "val")
   assert "index" == r.type("new_table:val:index")
 
   r.drop_index("new_table:val:index")
@@ -85,7 +85,7 @@ test "109 CREATE TABLE EXTENSIONS & SELECT_STORE" do |r|
   r.zadd "zset", 4, "z4"
 
   r.create_table_from_redis_object("z_table", "zset");
-  r.create_index("z_table:zkey:index", "z_table.zkey")
+  r.create_index("z_table:zkey:index", "z_table", "zkey")
   assert ["5.000000"] == r.select("zvalue", "z_table", "zkey = z5")
 
   r.create_table_as("x_table", "ZRANGE", "zset", "0 1 WITHSCORES")

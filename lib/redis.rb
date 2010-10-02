@@ -419,8 +419,9 @@ class Redis
     @client.call(:dump, tname, "TO", "MYSQL")
   end
 
-  def create_index(iname, indexed_column)
-    _bool @client.call(:create, "INDEX", iname, "ON", indexed_column)
+  def create_index(iname, tname, column)
+     col_w_paren = "(" + column + ")"
+    _bool @client.call(:create, "INDEX", iname, "ON", tname, col_w_paren)
   end
 
   def drop_index(iname)
