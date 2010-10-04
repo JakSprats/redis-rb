@@ -415,8 +415,8 @@ class Redis
     @client.call(:dump, tname)
   end
 
-  def dump_to_mysql(tname)
-    @client.call(:dump, tname, "TO", "MYSQL")
+  def dump_to_mysql(tname, msname)
+    @client.call(:dump, tname, "TO", "MYSQL", msname)
   end
 
   def create_index(iname, tname, column)
