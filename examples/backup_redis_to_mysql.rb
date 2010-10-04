@@ -2,6 +2,11 @@ require 'rubygems'
 require 'redis'
 require 'mysql'
 
+# PURPOSE:
+#  this script will backup ALL (except string) redis data objects into timestamped tables in the mysql DB "backupdb"
+#
+# USAGE FREQUENCY: daily
+#
 # REQUIREMENTS
 #  1.) create database "backupdb"
 
