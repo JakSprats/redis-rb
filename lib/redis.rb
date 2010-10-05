@@ -451,19 +451,16 @@ class Redis
       col_list     = args[0]
       tname        = args[1]
       where_clause = args[2]
-      fargs = col_list + " FROM " + tname + " WHERE " + where_clause
-      @client.call(:select, *(fargs.split))
+      f_args = col_list + " FROM " + tname + " WHERE " + where_clause
+      @client.call(:select, *(f_args.split))
       #@client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
     end
   end
 
   def select_store(col_list, tname, where_clause, redis_command, redis_name)
-    w_args = where_clause
-    w_args += " STORE "
-    w_args += redis_command
-    w_args += " "
-    w_args += redis_name
-    @client.call(:select, col_list, "FROM", tname, "WHERE", *(w_args.split))
+    f_args = col_list + " FROM " + tname + " WHERE " + where_clause +
+              " STORE " + redis_command + " " + redis_name
+    @client.call(:select, *(f_args.split))
   end
 
   def scanselect(col_list, tname, where_clause)
