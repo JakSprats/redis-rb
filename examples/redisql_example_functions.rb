@@ -301,7 +301,7 @@ end
 
 def jstore_div_subdiv(r)
   begin
-    r.dropTable("normal_div_subdiv")
+    r.drop_table("normal_div_subdiv")
   rescue StandardError => bang
   end
   p r.select_store("subdivision.id,subdivision.name,division.name", "subdivision,division", "subdivision.division = division.id AND division.id BETWEEN 11 AND 44", "INSERT", "normal_div_subdiv")
@@ -316,7 +316,7 @@ end
 
 def jstore_worker_location_table(r)
   begin
-    r.dropTable("w_c_tbl")
+    r.drop_table("w_c_tbl")
   rescue StandardError => bang
   end
   p r.select_store("external.name,division.location", "external,division", "external.division=division.id AND division.id BETWEEN 11 AND 80", "INSERT", "w_c_tbl")
