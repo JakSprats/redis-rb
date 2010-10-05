@@ -451,7 +451,9 @@ class Redis
       col_list     = args[0]
       tname        = args[1]
       where_clause = args[2]
-      @client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+      fargs = col_list + " FROM " + tname + " WHERE " + where_clause
+      @client.call(:select, *(fargs.split))
+      #@client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
     end
   end
 

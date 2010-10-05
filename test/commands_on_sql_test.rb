@@ -15,7 +15,7 @@ test "101 CREATE TABLE" do |r|
 
   assert ["id | INT | INDEX: new_table:id:index [BYTES: 0]", "val | TEXT ", "INFO: KEYS: [NUM: 0 MIN: (null) MAX: (null)] BYTES: [BT-DATA: 0 BT-TOTAL: 4145 INDEX: 0]"] == r.desc("new_table")
 
-  assert ["DROP TABLE IF EXISTS `new_table`;","CREATE TABLE `new_table` (  id INT PRIMARY KEY, val TEXT);", "LOCK TABLES `new_table` WRITE;", "UNLOCK TABLES;"] == r.dump_to_mysql("new_table")
+  assert ["DROP TABLE IF EXISTS `mysql_new_table`;","CREATE TABLE `mysql_new_table` (  id INT PRIMARY KEY, val TEXT);", "LOCK TABLES `mysql_new_table` WRITE;", "UNLOCK TABLES;"] == r.dump_to_mysql("new_table", "mysql_new_table")
 end
 
 test "102 INSERT" do |r|
