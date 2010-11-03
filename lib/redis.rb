@@ -482,6 +482,10 @@ class Redis
   def denormalize(tname, main_wildcard)
     @client.call(:denorm, tname, main_wildcard)
   end
+
+  def lua(cmd)
+    @client.call(:lua, cmd)
+  end
   # REDISQL END
 
   def hset(key, field, value)

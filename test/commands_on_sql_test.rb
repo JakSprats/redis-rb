@@ -21,9 +21,9 @@ end
 test "102 INSERT" do |r|
   r.changedb 12
   r.insert("new_table", "(1,ONE)");
-  assert "ONE" == r.select("val", "new_table", "id = 1")
+  assert ["ONE"] == r.select("val", "new_table", "id = 1")
   assert "INFO: BYTES: [ROW: 8 BT-DATA: 16 BT-TOTAL: 4161 INDEX: 0]" == r.insert_and_return_size("new_table", "(2,TWO)");
-  assert "2" == r.select("id", "new_table", "id = 2")
+  assert ["2"] == r.select("id", "new_table", "id = 2")
 end
 
 test "103 RANGE_QUERY" do |r|
@@ -36,9 +36,9 @@ test "104 JOIN" do |r|
   r.create_table("join_table", "(id INT, val TEXT)")
   assert "table" == r.type("join_table")
   r.insert("join_table", "(1,J_ONE)");
-  assert "J_ONE" == r.select("val", "join_table", "id = 1")
+  assert ["J_ONE"] == r.select("val", "join_table", "id = 1")
   r.insert("join_table", "(2,J_TWO)");
-  assert "2" == r.select("id", "join_table", "id = 2")
+  assert ["2"] == r.select("id", "join_table", "id = 2")
   assert ["ONE,J_ONE", "TWO,J_TWO"] == r.select("new_table.val,join_table.val", "new_table,join_table", "new_table.id = join_table.id AND new_table.id BETWEEN 1 AND 2")
   r.drop_table("join_table");
   assert "none" == r.type("join_table")
@@ -61,7 +61,7 @@ end
 test "107 UPDATE" do |r|
   r.changedb 12
   r.update("new_table", "val=two", "id = 2")
-  assert "two" == r.select("val", "new_table", "id = 2")
+  assert ["two"] == r.select("val", "new_table", "id = 2")
 end
 
 test "108 DELETE" do |r|
@@ -89,7 +89,7 @@ test "109 CREATE TABLE EXTENSIONS & SELECT_STORE" do |r|
   assert ["5.000000"] == r.select("zvalue", "z_table", "zkey = z5")
 
   r.create_table_as("x_table", "ZRANGE", "zset", "0 1 WITHSCORES")
-  assert "2" == r.select("value", "x_table", "pk = 4")
+  assert ["2"] == r.select("value", "x_table", "pk = 4")
 
   r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET", "z_hash")
   assert "4.000000" == r.hget("z_hash", "z4")
@@ -147,7 +147,31 @@ test "110 DE/NORMALISATION" do |r|
   assert({"name" => "bill", "age" => "33", "status" => "member"}) == r.hgetall("user:1")
 end
 
-test "111 FLUSHDB 12" do |r|
+test "111 LUA" do |r|
+  r.changedb 12
+  r.set("user:1:name", "TED");
+  r.set("user:10:name", "KENNY");
+  r.del("set1", "set2");
+  r.sadd("set1", 1);
+  r.sadd("set1", 10);
+  r.sadd("set1", 20);
+  r.sadd("set2", 1);
+  r.sadd("set2", 10);
+  lua_cmd = '
+       a = client("SINTER", "set1", "set2");
+       t = {};
+       i = 1;
+       for k,v in pairs(a) do
+         u = "user:" .. v .. ":name";
+         b = client("GET", u);
+         t[i] = b;
+         i = i + 1;
+       end
+       return t;'
+  assert ["KENNY", "TED"] == r.lua(lua_cmd);
+end
+
+test "112 FLUSHDB 12" do |r|
   r.changedb 12
   r.flushdb()
 end

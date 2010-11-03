@@ -323,3 +323,9 @@ def jstore_worker_location_table(r)
   p r.dump("w_c_tbl")
   puts
 end
+
+def lua_test(r)
+  p r.lua('return client("SET", "lua_R", 5*5);');
+  p r.lua('return client("GET", "lua_R");');
+end
+
