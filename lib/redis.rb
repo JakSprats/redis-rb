@@ -392,15 +392,15 @@ class Redis
 
   # REDISQL START
   def create_table(tname, col_defs)
-    _bool @client.call(:create, "TABLE", tname, *(col_defs.split))
+    _bool @client.call(:create, "TABLE", tname, col_defs)
   end
 
   def create_table_from_redis_object(tname, redis_obj)
-    _bool @client.call(:create, "TABLE", tname, "AS", "DUMP", redis_obj)
+    _bool @client.call(:create, "TABLE", tname, "AS DUMP " + redis_obj)
   end
 
-  def create_table_as(tname, redis_command, redis_obj, redis_args)
-    _bool @client.call(:create, "TABLE", tname, "AS", redis_command, redis_obj, *(redis_args.split))
+  def create_table_as(tname, redis_command)
+    _bool @client.call(:create, "TABLE", tname, "AS " + redis_command)
   end
 
   def drop_table(tname)
@@ -451,28 +451,25 @@ class Redis
       col_list     = args[0]
       tname        = args[1]
       where_clause = args[2]
-      f_args = col_list + " FROM " + tname + " WHERE " + where_clause
-      @client.call(:select, *(f_args.split))
-      #@client.call(:select, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+      @client.call(:select, col_list, "FROM", tname, "WHERE", where_clause)
     end
   end
 
-  def select_store(col_list, tname, where_clause, redis_command, redis_name)
-    f_args = col_list + " FROM " + tname + " WHERE " + where_clause +
-              " STORE " + redis_command + " " + redis_name
-    @client.call(:select, *(f_args.split))
+  def select_store(col_list, tname, where_clause, redis_command)
+    wc = where_clause + " STORE " + redis_command
+    @client.call(:select, col_list, "FROM", tname, "WHERE", wc)
   end
 
   def scanselect(col_list, tname, where_clause)
-    @client.call(:scanselect, col_list, "FROM", tname, "WHERE", *(where_clause.split))
+    @client.call(:scanselect, col_list, "FROM", tname, "WHERE", where_clause)
   end
 
   def delete(tname, where_clause)
-    @client.call(:delete, "FROM", tname, "WHERE", *(where_clause.split))
+    @client.call(:delete, "FROM", tname, "WHERE", where_clause)
   end
 
   def update(tname, update_list, where_clause)
-    @client.call(:update, tname, "SET", update_list, "WHERE", *(where_clause.split))
+    @client.call(:update, tname, "SET", update_list, "WHERE", where_clause)
   end
 
   def normalize(main_wildcard, secondary_wildcard_list)

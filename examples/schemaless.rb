@@ -16,7 +16,7 @@ Requirements:
 def import_from_mysql(r, con, tname)
   rs               = con.query("SHOW COLUMNS FROM " + tname)
   col_select       = ""
-  col_defs         = ""
+  col_defs         = "("
   tbl_has_date_col = 0
   i                = 0 
   rs.each_hash do |row|
@@ -35,6 +35,7 @@ def import_from_mysql(r, con, tname)
     end
     i += 1
   end
+  col_defs        += ")"
 
   r.create_table(tname, col_defs)
 

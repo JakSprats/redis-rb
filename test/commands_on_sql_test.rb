@@ -88,10 +88,10 @@ test "109 CREATE TABLE EXTENSIONS & SELECT_STORE" do |r|
   r.create_index("z_table:zkey:index", "z_table", "zkey")
   assert ["5.000000"] == r.select("zvalue", "z_table", "zkey = z5")
 
-  r.create_table_as("x_table", "ZRANGE", "zset", "0 1 WITHSCORES")
+  r.create_table_as("x_table", "ZRANGE zset 0 1 WITHSCORES")
   assert ["2"] == r.select("value", "x_table", "pk = 4")
 
-  r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET", "z_hash")
+  r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET z_hash")
   assert "4.000000" == r.hget("z_hash", "z4")
   r.del("z_hash")
   assert "none" == r.type("z_hash")

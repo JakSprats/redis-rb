@@ -32,7 +32,7 @@ r.insert("actionlist", "(14,3,32351,uploaded video")
 
 # select_store a query into many lists named "user_action_zset:$user_id" redspectively
 puts "select user_id, timestamp, action FROM actionlist WHERE id BETWEEN 1 AND 20 STORE ZADD user_action_zset$ "
-p r.select_store("user_id, timestamp, action", "actionlist", "id BETWEEN 1 AND 20", "ZADD",  "user_action_zset$")
+p r.select_store("user_id, timestamp, action", "actionlist", "id BETWEEN 1 AND 20", "ZADD user_action_zset$")
 
 # Get user 1's last two actions
 puts "ZREVRANGE user_action_zset:1 0 1"

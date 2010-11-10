@@ -2,33 +2,33 @@ require 'rubygems'
 require 'redis'
 
 def init_external(r)
-  r.create_table("external", "id int primary key, division int, health int, salary TEXT, name TEXT")
+  r.create_table("external", "(id int primary key, division int, health int, salary TEXT, name TEXT)")
   r.create_index("external:division:index", "external", "division")
   r.create_index("external:health:index  ", "external", "health")
 end
 def init_healthplan(r)
-  r.create_table("healthplan", "id int primary key, name TEXT")
+  r.create_table("healthplan", "(id int primary key, name TEXT)")
 end
 def init_division(r)
-  r.create_table("division", "id int primary key, name TEXT, location TEXT")
+  r.create_table("division", "(id int primary key, name TEXT, location TEXT)")
   r.create_index("division:name:index", "division", "name")
 end
 def init_subdivision(r)
-  r.create_table("subdivision", "id int primary key, division int, name TEXT")
+  r.create_table("subdivision", "(id int primary key, division int, name TEXT)")
   r.create_index("subdivision:division:index", "subdivision", "division")
 end
 def init_employee(r)
-  r.create_table("employee", "id int primary key, division int, salary TEXT, name TEXT")
+  r.create_table("employee", "(id int primary key, division int, salary TEXT, name TEXT)")
   r.create_index("employee:name:index", "employee", "name")
   r.create_index("employee:division:index", "employee", "division")
 end
 def init_customer(r)
-  r.create_table("customer", "id int primary key, employee int, name TEXT, hobby TEXT")
+  r.create_table("customer", "(id int primary key, employee int, name TEXT, hobby TEXT)")
   r.create_index("customer:employee:index", "customer", "employee")
   r.create_index("customer:hobby:index   ", "customer", "hobby")
 end
 def init_worker(r)
-  r.create_table("worker", "id int primary key, division int, health int, salary TEXT, name TEXT")
+  r.create_table("worker", "(id int primary key, division int, health int, salary TEXT, name TEXT)")
   r.create_index("worker:division:index", "worker", "division")
   r.create_index("worker:health:index  ", "worker", "health")
 end
@@ -231,7 +231,6 @@ def joiner(r)
   join_div_sub_wrkr(r)
 end
 
-
 def works(r)
   initer(r)
   inserter(r)
@@ -290,12 +289,12 @@ def scan_healthpan(r)
 end
 
 def istore_worker_name_list(r)
-  p r.select_store("name", "worker", "division BETWEEN 11 AND 33", "RPUSH", "l_worker_name")
+  p r.select_store("name", "worker", "division BETWEEN 11 AND 33", "RPUSH l_worker_name")
   p r.lrange("l_worker_name", 0 -1)
 end
 
 def istore_worker_hash_name_salary(r)
-  p r.select_store("name,salary", "worker", "division BETWEEN 11 AND 33", "HSET", "h_worker_name_to_salary")
+  p r.select_store("name,salary", "worker", "division BETWEEN 11 AND 33", "HSET h_worker_name_to_salary")
   p r.hgetall("h_worker_name_to_salary")
 end
 
@@ -304,12 +303,12 @@ def jstore_div_subdiv(r)
     r.drop_table("normal_div_subdiv")
   rescue StandardError => bang
   end
-  p r.select_store("subdivision.id,subdivision.name,division.name", "subdivision,division", "subdivision.division = division.id AND division.id BETWEEN 11 AND 44", "INSERT", "normal_div_subdiv")
+  p r.select_store("subdivision.id,subdivision.name,division.name", "subdivision,division", "subdivision.division = division.id AND division.id BETWEEN 11 AND 44", "INSERT normal_div_subdiv")
   p r.dump("normal_div_subdiv")
 end
 
 def jstore_worker_location_hash(r)
-  p r.select_store("external.name,division.location", "external,division", "external.division=division.id AND division.id BETWEEN 11 AND 80", "HSET", "worker_city_hash")
+  p r.select_store("external.name,division.location", "external,division", "external.division=division.id AND division.id BETWEEN 11 AND 80", "HSET worker_city_hash")
   p r.hgetall("worker_city_hash")
   puts
 end
@@ -319,7 +318,7 @@ def jstore_worker_location_table(r)
     r.drop_table("w_c_tbl")
   rescue StandardError => bang
   end
-  p r.select_store("external.name,division.location", "external,division", "external.division=division.id AND division.id BETWEEN 11 AND 80", "INSERT", "w_c_tbl")
+  p r.select_store("external.name,division.location", "external,division", "external.division=division.id AND division.id BETWEEN 11 AND 80", "INSERT w_c_tbl")
   p r.dump("w_c_tbl")
   puts
 end

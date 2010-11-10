@@ -19,7 +19,7 @@ There are also [MORPH](http://code.google.com/p/redisql/wiki/CommandReference#MO
     >> r.create_table_as("x_table", "ZRANGE", "zset", "0 1 WITHSCORES")
 
     Create the redis HashTable "z_hash" from the results of the SQL command "SELECT zkey,zvalue FROM z_table WHERE zkey BETWEEN z2 AND z4"
-    >> r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET", "z_hash")
+    >> r.select_store("zkey,zvalue", "z_table", "zkey BETWEEN z2 AND z4", "HSET z_hash")
 The MORPH commands work on all redis data objects and w/ all SQL SELECT result sets (i.e. range-queries and joins)
 
 AND of course ALL redis commands are supported ... the following is the text of redis-rb
